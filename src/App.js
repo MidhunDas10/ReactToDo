@@ -7,18 +7,23 @@ import {v4} from "uuid";
 const item = {
   id: v4(),
   name: "Clean the house",
-  discription:"fasdfasf afdsf asdf df dfsd fdsfgs sg sdg "
+  subject:" Do something",
+  description:"fasdfasf afdsf asdf df dfsd fdsfgs sg sdg "
 }
 
 const item2 = {
   id: v4(),
   name: "Wash the car",
-  discription:"fasdfasf afdsf asdf df dfsd fdsfgs sg sdg "
+  subject:" Do something",
+  description:"fasdfasf afdsf asdf df dfsd fdsfgs sg sdg "
 
 }
 
 function App() {
   const [text, setText] = useState("")
+  const [show,setShow] = useState(false)
+  const [text1, setText1] = useState("")
+  const [text2, setText2] = useState("")
   const [state, setState] = useState({
     "todo": {
       title: "Todo",
@@ -68,7 +73,10 @@ function App() {
           items: [
             {
               id: v4(),
-              name: text
+              name: text,
+              subject: text2,
+              description: text1,
+
             },
             ...prev.todo.items
           ]
@@ -77,6 +85,8 @@ function App() {
     })
 
     setText("")
+    setText1("")
+    setText2("")
   }
 
   return (
@@ -87,7 +97,7 @@ function App() {
           return(
             <div key={key} className={"column"}>
               <h3>{data.title}</h3>
-              <h1>{data.items.discription}</h1>
+              <h1>{data.items.description}</h1>
               <Droppable droppableId={key}>
                 {(provided, snapshot) => {
                   return(
@@ -97,18 +107,25 @@ function App() {
                       className={"droppable-col"}
                     >
                       {data.items.map((el, index) => {
+                        {console.log(index)}
                         return(
+                          
                           <Draggable key={el.id} index={index} draggableId={el.id}>
                             {(provided, snapshot) => {
-                              console.log(snapshot)
+                              // console.log(snapshot)
                               return(
                                 <div
                                   className={`item ${snapshot.isDragging && "dragging"}`}
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
+                      
+                                  onClick={()=>setShow(true)}
                                 >
-                                  {el.name}
+                                  {console.log(el.id)}
+                                  <h3 className="heading">{el.name}</h3>  <br/>
+                                  <h4>{el.subject}</h4> <br/>
+                                  <h5>{el.description}</h5>
                                 </div>
                               )
                             }}
@@ -126,10 +143,23 @@ function App() {
       </DragDropContext>
       <div>
         <h1>Create</h1>
-        <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
-        <button className="button" onClick={addItem}>Add</button>
+        <input placeholder="Title" type="text" value={text} onChange={(e) => setText(e.target.value)}/> <br/>
+        <input placeholder="Subject" type="text" value={text2} onChange={(e) => setText2(e.target.value)}/> <br/>
+        <input placeholder="Description" type="text" value={text1} onChange={(e) => setText1(e.target.value)}/>
+        <button  className="button" onClick={addItem}>Add</button>
+        <div>
+
+        </div>
       </div>
-    </div>
+      
+        {console.log(item.name)}
+        {show?
+        <div>
+          <h3 className="heading">{item.name}</h3>  <br/>
+          <h4>{item.subject}</h4> <br/>
+          <h5>{item.description}</h5>
+        </div>:null}
+      </div>
   );
 }
 
